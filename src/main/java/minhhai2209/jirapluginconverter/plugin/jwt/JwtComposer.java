@@ -32,7 +32,7 @@ public class JwtComposer {
               .issuedAt(issuedAt)
               .expirationTime(expiresAt)
               .issuer(key)
-              .claim("context", context);
+              .claim("context", context)
               .subject(context.getUser().getUserKey());
       Map<String, List<String>> parameters = JwtHelper.getParameters(pairs);
       Map<String, String[]> parameterMap = JwtHelper.getParameterMap(parameters);
