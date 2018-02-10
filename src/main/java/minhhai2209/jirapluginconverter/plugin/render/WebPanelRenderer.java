@@ -75,7 +75,9 @@ public class WebPanelRenderer implements com.atlassian.plugin.web.renderer.WebPa
       String simpleDlg = dlg;
       String general = "";
       String w = "";
-      String h = "";
+      // make sure the iframe is at least visible by default given a raw html fragment
+      // this can be overriden within the head/body of the iframe via a style block or external css file
+      String h = "500px";
       String productCtx = JsonUtils.toJson(productContext);
       String timezone = timeZone.getID();
       String loc = LocaleUtils.getLocale(localeResolver);
