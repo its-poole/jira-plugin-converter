@@ -34,10 +34,9 @@ public class JwtComposer {
               .issuer(key)
               .claim("context", context);
 
-      JwtContextUser user = context.getUser();
-
-      // user is null on initial install event
-      if (user != null) {
+      // context is null on initial install event
+      if (context != null) {
+        JwtContextUser user = context.getUser();
         String subject = user.getUserKey();
         jwtJsonBuilder.subject(subject);
       }
