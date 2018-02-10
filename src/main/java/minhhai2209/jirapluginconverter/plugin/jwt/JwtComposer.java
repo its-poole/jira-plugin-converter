@@ -32,8 +32,16 @@ public class JwtComposer {
               .issuedAt(issuedAt)
               .expirationTime(expiresAt)
               .issuer(key)
-              .claim("context", context)
-              .subject(context.getUser().getUserKey());
+              .claim("context", context);
+
+      JwtContextUser user = context.getUser();
+
+      // user is null on initial install event
+      if (user != null) {
+        String subject = user.getUserKey();
+        jwtJsonBuilder.subject(subject);
+      }
+
       Map<String, List<String>> parameters = JwtHelper.getParameters(pairs);
       Map<String, String[]> parameterMap = JwtHelper.getParameterMap(parameters);
       CanonicalHttpUriRequest canonicalHttpUrlRequest = new CanonicalHttpUriRequest(method, apiPath, null, parameterMap);
