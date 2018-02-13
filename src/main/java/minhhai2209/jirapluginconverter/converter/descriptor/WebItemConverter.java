@@ -78,11 +78,9 @@ public class WebItemConverter extends ModuleConverter<WebItemModule, WebItem>{
     Link link = new Link();
     boolean menu = false;
     List<WebSection> sections = modules.getWebSections();
-    if (sections != null) {
-      for (WebSection section : sections) {
-        if (key.equals(section.getLocation())) {
-          menu = true;
-        }
+    for (WebSection section : sections) {
+      if (key.equals(section.getLocation())) {
+        menu = true;
       }
     }
     if (menu) {

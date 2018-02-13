@@ -2,25 +2,25 @@ package minhhai2209.jirapluginconverter.converter.descriptor;
 
 import minhhai2209.jirapluginconverter.plugin.descriptor.WebItemModule;
 import minhhai2209.jirapluginconverter.connect.descriptor.Modules;
-import minhhai2209.jirapluginconverter.connect.descriptor.webitem.WebItem;
+import minhhai2209.jirapluginconverter.connect.descriptor.Page;
 import minhhai2209.jirapluginconverter.connect.descriptor.jira.ProjectAdminTabPanel;
 
 public class JiraAdminTabPanelConverter extends ModuleConverter<WebItemModule, ProjectAdminTabPanel>{
 
-  private static WebItemConverter webItemConverter = new WebItemConverter();
+  private static PageConverter pageConverter = new PageConverter("alt.jira.project.config");
 
   @Override
   public WebItemModule toPluginModule(ProjectAdminTabPanel projectAdminTabPanel, Modules modules) {
-    WebItem webItem = new WebItem();
+    Page page = new Page();
 
-    webItem.setLocation(projectAdminTabPanel.getLocation());
-    webItem.setWeight(projectAdminTabPanel.getWeight());
-    webItem.setUrl(projectAdminTabPanel.getUrl());
-    webItem.setName(projectAdminTabPanel.getName());
-    webItem.setConditions(projectAdminTabPanel.getConditions());
-    webItem.setKey(projectAdminTabPanel.getKey());
+    page.setLocation(projectAdminTabPanel.getLocation());
+    page.setWeight(projectAdminTabPanel.getWeight());
+    page.setUrl(projectAdminTabPanel.getUrl());
+    page.setName(projectAdminTabPanel.getName());
+    page.setConditions(projectAdminTabPanel.getConditions());
+    page.setKey(projectAdminTabPanel.getKey());
 
-    WebItemModule pluginModule = webItemConverter.toPluginModule(webItem, modules);
+    WebItemModule pluginModule = pageConverter.toPluginModule(page, modules);
 
     return pluginModule;
   }
