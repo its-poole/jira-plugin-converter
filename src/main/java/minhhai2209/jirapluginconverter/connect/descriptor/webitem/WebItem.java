@@ -9,9 +9,10 @@ import minhhai2209.jirapluginconverter.connect.descriptor.AbstractModule;
 import minhhai2209.jirapluginconverter.connect.descriptor.Context;
 import minhhai2209.jirapluginconverter.connect.descriptor.I18nProperty;
 import minhhai2209.jirapluginconverter.connect.descriptor.Icon;
+import minhhai2209.jirapluginconverter.connect.descriptor.UrlModule;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class WebItem extends AbstractModule {
+public class WebItem extends AbstractModule implements UrlModule {
 
   private Context context;
   private I18nProperty tooltip;

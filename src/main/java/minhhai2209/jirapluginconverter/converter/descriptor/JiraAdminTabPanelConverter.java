@@ -2,7 +2,7 @@ package minhhai2209.jirapluginconverter.converter.descriptor;
 
 import minhhai2209.jirapluginconverter.plugin.descriptor.WebItemModule;
 import minhhai2209.jirapluginconverter.connect.descriptor.Modules;
-import minhhai2209.jirapluginconverter.connect.descriptor.Page;
+import minhhai2209.jirapluginconverter.connect.descriptor.page.Page;
 import minhhai2209.jirapluginconverter.connect.descriptor.jira.ProjectAdminTabPanel;
 
 public class JiraAdminTabPanelConverter extends ModuleConverter<WebItemModule, ProjectAdminTabPanel>{

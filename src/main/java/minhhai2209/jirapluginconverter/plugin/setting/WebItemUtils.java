@@ -6,79 +6,90 @@ import java.util.Map;
 
 import minhhai2209.jirapluginconverter.connect.descriptor.Context;
 import minhhai2209.jirapluginconverter.connect.descriptor.Modules;
+import minhhai2209.jirapluginconverter.connect.descriptor.UrlModule;
 import minhhai2209.jirapluginconverter.connect.descriptor.webitem.WebItem;
 import minhhai2209.jirapluginconverter.connect.descriptor.webitem.WebItemTarget;
 import minhhai2209.jirapluginconverter.connect.descriptor.webitem.WebItemTarget.Type;
+import minhhai2209.jirapluginconverter.connect.descriptor.jira.ProjectAdminTabPanel;
 import minhhai2209.jirapluginconverter.plugin.utils.EnumUtils;
 
 public class WebItemUtils {
 
-  private static Map<String, WebItem> webItemLookup;
+  private static Map<String, UrlModule> urlModuleLookup;
 
   public static void buildWebItemLookup() {
     Modules modules = PluginSetting.getModules();
     List<WebItem> webItems = modules.getWebItems();
-    webItemLookup = new HashMap<String, WebItem>();
+    List<ProjectAdminTabPanel> jiraProjectAdminTabPanels = modules.getJiraProjectAdminTabPanels();
+    urlModuleLookup = new HashMap<String, UrlModule>();
+
     if (webItems != null) {
       for (WebItem webItem : webItems) {
         String key = webItem.getKey();
-        webItemLookup.put(key, webItem);
+        urlModuleLookup.put(key, webItem);
+      }
+    }
+    if (jiraProjectAdminTabPanels != null) {
+      for (ProjectAdminTabPanel projectAdminTabPanel: jiraProjectAdminTabPanels) {
+        String key = projectAdminTabPanel.getKey();
+        urlModuleLookup.put(key, projectAdminTabPanel);
       }
     }
   }
 
-  public static String getFullUrl(WebItem webItem) {
-    String webItemUrl = webItem.getUrl();
+  public static String getFullUrl(UrlModule urlModule) {
+    String webItemUrl = urlModule.getUrl();
+    String baseUrl = PluginSetting.getPluginBaseUrl();
+
     if (webItemUrl.startsWith("http://") || webItemUrl.startsWith("https://")) {
       return webItemUrl;
     }
-    Context context = webItem.getContext();
-    if (context == null) {
-      context = Context.addon;
-    }
-    WebItemTarget target = webItem.getTarget();
-    Type type;
-    if (target == null) {
-      type = Type.page;
-    } else {
-      type = target.getType();
-    }
-    if (type == null) {
-      type = Type.page;
-    }
-    String baseUrl;
-    if (EnumUtils.equals(type, Type.page)) {
-      switch (context) {
-        case addon:
-        case ADDON:
-          baseUrl = PluginSetting.getPluginBaseUrl();
-          break;
-        case product:
-        case PRODUCT:
-          baseUrl = JiraUtils.getFullBaseUrl();
-          break;
-        case page:
-        case PAGE:
-          baseUrl = JiraUtils.getFullBaseUrl() + "/plugins/servlet/ac/" + PluginSetting.getDescriptor().getKey() + "/";
-          break;
-        default:
-          throw new IllegalStateException();
+
+    if (urlModule instanceof WebItem) {
+      Type type = Type.page;
+      WebItem webItem = (WebItem)urlModule;
+      Context context = webItem.getContext();
+      WebItemTarget target = webItem.getTarget();
+
+      if (context == null) {
+        context = Context.addon;
       }
-    } else {
-      switch (context) {
-        case page:
-        case PAGE:
-          baseUrl = PluginSetting.getPluginBaseUrl() + "/";
-          break;
-        default:
-          baseUrl = PluginSetting.getPluginBaseUrl();
+      if (target != null && target.getType() != null) {
+        type = target.getType();
+      }
+      if (EnumUtils.equals(type, Type.page)) {
+        switch (context) {
+          case addon:
+          case ADDON:
+            baseUrl = PluginSetting.getPluginBaseUrl();
+            break;
+          case product:
+          case PRODUCT:
+            baseUrl = JiraUtils.getFullBaseUrl();
+            break;
+          case page:
+          case PAGE:
+            baseUrl = JiraUtils.getFullBaseUrl() + "/plugins/servlet/ac/" + PluginSetting.getDescriptor().getKey() + "/";
+            break;
+          default:
+            throw new IllegalStateException();
+        }
+      } else {
+        switch (context) {
+          case page:
+          case PAGE:
+            baseUrl = PluginSetting.getPluginBaseUrl() + "/";
+            break;
+          default:
+            baseUrl = PluginSetting.getPluginBaseUrl();
+        }
       }
     }
-    String url = baseUrl + webItemUrl;
-    return url;
+
+    return baseUrl + webItemUrl;
   }
 
-  public static WebItem getWebItem(String key) {
-    return webItemLookup.get(key);
+  public static UrlModule getWebItem(String key) {
+    return urlModuleLookup.get(key);
   }
 }

@@ -18,8 +18,7 @@ public class PageUtils {
   public static String getFullUrl(Page page) {
     String baseUrl = PluginSetting.getPluginBaseUrl();
     String pageUrl = page.getUrl();
-    String url = baseUrl + pageUrl;
-    return url;
+    return baseUrl + pageUrl;
   }
 
   public static void buildGeneralPageLookup() {

@@ -7,6 +7,7 @@ import com.atlassian.jira.timezone.TimeZoneService;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.sal.api.message.LocaleResolver;
 import com.atlassian.templaterenderer.TemplateRenderer;
+import minhhai2209.jirapluginconverter.connect.descriptor.UrlModule;
 import minhhai2209.jirapluginconverter.connect.descriptor.page.Page;
 import minhhai2209.jirapluginconverter.connect.descriptor.webitem.WebItem;
 import minhhai2209.jirapluginconverter.plugin.iframe.HostConfig;
@@ -192,8 +193,9 @@ public class PageRenderer extends HttpServlet {
 
       } else {
 
-        WebItem webItem = WebItemUtils.getWebItem(moduleKey);
-        String fullUrl = WebItemUtils.getFullUrl(webItem);
+        WebItemUtils.buildWebItemLookup();
+        UrlModule urlModule = WebItemUtils.getWebItem(moduleKey);
+        String fullUrl = WebItemUtils.getFullUrl(urlModule);
 
         JiraAuthenticationContext authenticationContext = ComponentAccessor.getJiraAuthenticationContext();
         ApplicationUser user = authenticationContext != null ? authenticationContext.getLoggedInUser() : null;
@@ -246,7 +248,7 @@ public class PageRenderer extends HttpServlet {
               "GET",
               uriBuilder,
               userKey,
-              webItem.getUrl());
+              urlModule.getUrl());
           uriBuilder.addParameter("jwt", jwt);
         }
         String url = uriBuilder.toString();

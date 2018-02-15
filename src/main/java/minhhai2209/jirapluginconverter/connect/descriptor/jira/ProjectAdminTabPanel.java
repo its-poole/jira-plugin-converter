@@ -3,8 +3,9 @@ package minhhai2209.jirapluginconverter.connect.descriptor.jira;
 import java.util.Map;
 
 import minhhai2209.jirapluginconverter.connect.descriptor.AbstractModule;
+import minhhai2209.jirapluginconverter.connect.descriptor.UrlModule;
 
-public class ProjectAdminTabPanel extends AbstractModule {
+public class ProjectAdminTabPanel extends AbstractModule implements UrlModule {
 
   private String url;
   private Map<String, String> params;
