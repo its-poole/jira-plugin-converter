@@ -72,4 +72,7 @@ public class WebItem extends AbstractModule implements UrlModule {
   public void setUrl(String url) {
     this.url = url;
   }
+  public boolean isAdminModule() {
+    return false;
+  }
 }

@@ -269,8 +269,7 @@ public class PageRenderer extends HttpServlet {
         hostConfig.setTimeZone(timezone);
 
         String hostConfigJson = JsonUtils.toJson(hostConfig);
-
-        String template = "general-page";
+        String template = urlModule.isAdminModule() ? "admin-page" : "general-page";
 
         Map<String, Object> context = new HashMap<String, Object>();
         context.put("hostConfigJson", hostConfigJson);
@@ -278,6 +277,8 @@ public class PageRenderer extends HttpServlet {
         context.put("title", title);
         context.put("chrome", chrome);
         context.put("plugin", PluginSetting.getPlugin());
+        context.put("projectId", productContext.get("project.id"));
+        context.put("projectKey", productContext.get("project.key"));
         render(template, response, context);
       }
 

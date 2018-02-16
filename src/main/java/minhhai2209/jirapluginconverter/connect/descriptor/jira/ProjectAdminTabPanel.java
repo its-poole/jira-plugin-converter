@@ -28,4 +28,7 @@ public class ProjectAdminTabPanel extends AbstractModule implements UrlModule {
   public void setWeight(int weight) {
     this.weight = weight;
   }
+  public boolean isAdminModule() {
+    return true;
+  }
 }
