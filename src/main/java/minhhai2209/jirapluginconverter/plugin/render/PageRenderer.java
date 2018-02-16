@@ -193,7 +193,6 @@ public class PageRenderer extends HttpServlet {
 
       } else {
 
-        WebItemUtils.buildWebItemLookup();
         UrlModule urlModule = WebItemUtils.getWebItem(moduleKey);
         String fullUrl = WebItemUtils.getFullUrl(urlModule);
 
