@@ -7,6 +7,7 @@ import com.atlassian.jira.timezone.TimeZoneService;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.sal.api.message.LocaleResolver;
 import minhhai2209.jirapluginconverter.connect.descriptor.Context;
+import minhhai2209.jirapluginconverter.connect.descriptor.UrlModule;
 import minhhai2209.jirapluginconverter.connect.descriptor.webitem.WebItem;
 import minhhai2209.jirapluginconverter.connect.descriptor.webitem.WebItemTarget;
 import minhhai2209.jirapluginconverter.connect.descriptor.webitem.WebItemTarget.Type;
@@ -50,20 +51,23 @@ public class WebItemRenderer extends HttpServlet {
     try {
 
       String moduleKey = RequestUtils.getModuleKey(request);
-      WebItem webItem = WebItemUtils.getWebItem(moduleKey);
-      String webItemUrl = webItem.getUrl();
-      String fullUrl = WebItemUtils.getFullUrl(webItem);
-      WebItemTarget target = webItem.getTarget();
-      Type type = null;
-      if (target != null) {
-        type = target.getType();
-      }
-      if (type == null) {
-        type = Type.page;
-      }
-      Context context = webItem.getContext();
-      if (context == null) {
-        context = Context.addon;
+      UrlModule urlModule = WebItemUtils.getWebItem(moduleKey);
+      String webItemUrl = urlModule.getUrl();
+      String fullUrl = WebItemUtils.getFullUrl(urlModule);
+      Context context = Context.addon;
+      Type type = Type.page;
+
+      if (urlModule instanceof WebItem) {
+        WebItem webItem = (WebItem)urlModule;
+        WebItemTarget target = webItem.getTarget();
+
+        if (target != null && target.getType() != null) {
+          type = target.getType();
+        }
+
+        if (webItem.getContext() != null) {
+          context = webItem.getContext();
+        }
       }
 
       JiraAuthenticationContext authenticationContext = ComponentAccessor.getJiraAuthenticationContext();

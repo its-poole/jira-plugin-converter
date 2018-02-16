@@ -4,7 +4,10 @@
 
 <html>
 <head>
-  <meta name="decorator" content="atl.admin"/>
+  <meta name="decorator" content="admin"/>
+  <meta name="projectKey" content="$projectKey" />
+  <meta name="projectId" content="$projectId" />
+  <meta name="admin.active.section" content="atl.jira.proj.config">
   <title>$!title</title>
 </head>
 <body class="ac-content-page">

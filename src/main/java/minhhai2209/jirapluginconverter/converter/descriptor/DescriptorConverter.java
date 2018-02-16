@@ -7,6 +7,7 @@ import minhhai2209.jirapluginconverter.connect.descriptor.Descriptor;
 import minhhai2209.jirapluginconverter.connect.descriptor.Modules;
 import minhhai2209.jirapluginconverter.connect.descriptor.jira.EntityProperty;
 import minhhai2209.jirapluginconverter.connect.descriptor.jira.WorkflowPostFuntion;
+import minhhai2209.jirapluginconverter.connect.descriptor.jira.ProjectAdminTabPanel;
 import minhhai2209.jirapluginconverter.connect.descriptor.page.Page;
 import minhhai2209.jirapluginconverter.connect.descriptor.tabpanel.TabPanel;
 import minhhai2209.jirapluginconverter.connect.descriptor.webitem.WebItem;
@@ -32,6 +33,7 @@ public class DescriptorConverter {
   private static IssueTabPanelConverter issueTabPanelConverter = new IssueTabPanelConverter();
   private static ProjectTabPanelConverter projectTabPanelConverter = new ProjectTabPanelConverter();
   private static WorkflowPostFunctionConverter workflowPostFunctionConverter = new WorkflowPostFunctionConverter();
+  private static JiraAdminTabPanelConverter projectAdminTabPanelConverter = new JiraAdminTabPanelConverter();
 
   public static String convert(Modules modules) {
     try {
@@ -107,6 +109,14 @@ public class DescriptorConverter {
         for (WorkflowPostFuntion workflowPostFuntion : jiraWorkflowPostFunctions) {
           WorkflowPostFunctionModule workflowPostFunctionModule = workflowPostFunctionConverter.toPluginModule(workflowPostFuntion, modules);
           XmlUtils.toXml(workflowPostFunctionModule, writer);
+        }
+      }
+
+      List<ProjectAdminTabPanel> jiraProjectAdminTabPanels = modules.getJiraProjectAdminTabPanels();
+      if (jiraProjectAdminTabPanels != null) {
+        for (ProjectAdminTabPanel projectAdminTabPanel: jiraProjectAdminTabPanels) {
+          WebItemModule webItemModule = projectAdminTabPanelConverter.toPluginModule(projectAdminTabPanel, modules);
+          XmlUtils.toXml(webItemModule, writer);
         }
       }
 
