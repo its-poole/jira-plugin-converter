@@ -30,7 +30,7 @@ public class StaticResourcesFilter implements Filter {
   private static final String HOST_RESOURCE_PATH = "/atlassian-connect";
   private static final int PLUGIN_TTL_NEAR_FUTURE = 60 * 30; // 30 min
 
-  private static final Pattern RESOURCE_PATTERN = Pattern.compile("all\\.(js|css)");
+  private static final Pattern RESOURCE_PATTERN = Pattern.compile("(all|all-debug)\\.(js|css)");
 
   private FilterConfig config;
   private LoadingCache<String, CacheEntry> loadingCache;
