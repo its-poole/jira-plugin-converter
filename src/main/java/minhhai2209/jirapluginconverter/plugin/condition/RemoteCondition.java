@@ -1,10 +1,11 @@
 package minhhai2209.jirapluginconverter.plugin.condition;
 
 import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.plugin.webfragment.model.JiraHelper;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.plugin.PluginParseException;
-import com.atlassian.plugin.web.Condition;
+import com.atlassian.jira.plugin.webfragment.conditions.AbstractWebCondition;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import minhhai2209.jirapluginconverter.plugin.jwt.JwtComposer;
 import minhhai2209.jirapluginconverter.plugin.render.ParameterContextBuilder;
@@ -18,11 +19,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
-
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-public class RemoteCondition implements Condition {
-  
+public class RemoteCondition extends AbstractWebCondition {
+
   private Map<String, String> params;
   private String conditionUrl;
   private ObjectMapper om = new ObjectMapper();
@@ -34,19 +35,20 @@ public class RemoteCondition implements Condition {
   }
 
   @Override
-  public boolean shouldDisplay(Map<String, Object> context) {
-    return conditionUrl == null || getRemoteCondition(context);
+  public boolean shouldDisplay(ApplicationUser applicationUser, JiraHelper jiraHelper) {
+    return conditionUrl == null || getRemoteCondition(jiraHelper);
   }
-  
-  private boolean getRemoteCondition(Map<String, Object> context) {
+
+  private boolean getRemoteCondition(JiraHelper jiraHelper) {
     try {
       String baseUrl = PluginSetting.getPluginBaseUrl();
       String fullUrl = baseUrl + conditionUrl;
 
+      HttpServletRequest request = jiraHelper.getRequest();
       JiraAuthenticationContext authenticationContext = ComponentAccessor.getJiraAuthenticationContext();
       ApplicationUser user = authenticationContext != null ? authenticationContext.getLoggedInUser() : null;
 
-      Map<String, String> productContext = ParameterContextBuilder.buildContext(null, context, null, null);
+      Map<String, String> productContext = ParameterContextBuilder.buildContext(request, null, null, null);
       String userKey = user != null ? user.getKey() : "";
       String lic = LicenseUtils.getLic();
 
@@ -60,6 +62,23 @@ public class RemoteCondition implements Condition {
           }
         }
       }
+
+      String projectId = productContext.get("project.id");
+      String issueId = productContext.get("issue.id");
+      String issueTypeId = productContext.get("issuetype.id");
+
+      if (projectId != null) {
+        builder.addParameter("projectId", projectId);
+      }
+
+      if (issueId != null) {
+        builder.addParameter("issueId", issueId);
+      }
+
+      if (issueTypeId != null) {
+        builder.addParameter("issueTypeId", issueTypeId);
+      }
+
       builder.addParameter("lic", LicenseUtils.getLic())
           .addParameter("user_key", userKey);
 
@@ -87,7 +106,7 @@ public class RemoteCondition implements Condition {
     } catch (Exception e) {
       //any exception will return false
     }
-    
+
     return false;
   }
 
