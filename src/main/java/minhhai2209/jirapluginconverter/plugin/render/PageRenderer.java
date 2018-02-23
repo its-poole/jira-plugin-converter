@@ -6,6 +6,9 @@ import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.timezone.TimeZoneService;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.sal.api.message.LocaleResolver;
+import com.atlassian.sal.api.user.UserManager;
+import com.atlassian.sal.api.user.UserProfile;
+import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.templaterenderer.TemplateRenderer;
 import minhhai2209.jirapluginconverter.connect.descriptor.UrlModule;
 import minhhai2209.jirapluginconverter.connect.descriptor.page.Page;
@@ -24,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -40,14 +44,22 @@ public class PageRenderer extends HttpServlet {
 
   private LocaleResolver localeResolver;
 
+  private LoginUriProvider loginUriProvider;
+
+  private UserManager userManager;
+
   public PageRenderer(
       TemplateRenderer renderer,
       TimeZoneService timeZoneService,
-      LocaleResolver localeResolver) {
+      LocaleResolver localeResolver,
+      UserManager userManager,
+      LoginUriProvider loginUriProvider) {
 
     this.renderer = renderer;
     this.timeZoneService = timeZoneService;
     this.localeResolver = localeResolver;
+    this.userManager = userManager;
+    this.loginUriProvider = loginUriProvider;
   }
 
   @Override
@@ -192,8 +204,17 @@ public class PageRenderer extends HttpServlet {
         render(template, response, context);
 
       } else {
-
         UrlModule urlModule = WebItemUtils.getWebItem(moduleKey);
+
+        if (urlModule.isAdminModule()) {
+          UserProfile userProfile = userManager.getRemoteUser(request);
+
+          if (userProfile == null) {
+            redirectToLogin(request, response);
+            return;
+          }
+        }
+
         String fullUrl = WebItemUtils.getFullUrl(urlModule);
 
         JiraAuthenticationContext authenticationContext = ComponentAccessor.getJiraAuthenticationContext();
@@ -284,6 +305,19 @@ public class PageRenderer extends HttpServlet {
     } catch (Exception e) {
       ExceptionUtils.throwUnchecked(e);
     }
+  }
+
+  private URI getUri(HttpServletRequest request) {
+    StringBuffer builder = request.getRequestURL();
+    if (request.getQueryString() != null) {
+      builder.append("?");
+      builder.append(request.getQueryString());
+    }
+    return URI.create(builder.toString());
+  }
+
+  private void redirectToLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    response.sendRedirect(loginUriProvider.getLoginUri(getUri(request)).toASCIIString());
   }
 
   private void render(String vm, HttpServletResponse response, Map<String, Object> context) throws IOException {
