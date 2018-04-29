@@ -96,7 +96,10 @@ public class PluginLifeCycleEventHandler {
 
   private void notify(StringBuilder error, EventType eventType, String uri, String sharedSecret, String jwt) throws Exception {
     try {
-      if (uri != null) {
+      String configuredPluginBaseUrl = PluginSetting.getPluginBaseUrl();
+
+      if (uri != null && configuredPluginBaseUrl != null && !configuredPluginBaseUrl.isEmpty()) {
+        System.out.println(PluginSetting.getDescriptor().getKey() + " PLUGIN NOTIFY EVENT: " + "publishing install payload to: " + configuredPluginBaseUrl + uri);
         PluginLifeCycleEvent event = new PluginLifeCycleEvent();
         event.setBaseUrl(JiraUtils.getFullBaseUrl());
         event.setClientKey(KeyUtils.getClientKey());
@@ -110,6 +113,8 @@ public class PluginLifeCycleEventHandler {
         event.setServiceEntitlementNumber(SenUtils.getSen());
         event.setSharedSecret(sharedSecret);
         notify(uri, event, jwt, error);
+      } else {
+        System.out.println(PluginSetting.getDescriptor().getKey() + " PLUGIN NOTIFY EVENT: suppressing notification. no plugin base url configured.");
       }
     } catch (Exception e) {
       System.out.println(PluginSetting.getDescriptor().getKey() + " PLUGIN NOTIFY EVENT '" +
