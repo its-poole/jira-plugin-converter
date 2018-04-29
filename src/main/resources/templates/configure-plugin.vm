@@ -67,7 +67,7 @@
           </div>
           <div class="field-group">
             <label for="url">$i18n.getText("plugin.configuration.url.label")</label>
-            <input type="text" value="$url" id="url" name="url" class="text">
+            <input type="url" required pattern="https?://.+"  value="$url" id="url" name="url" class="text">
             <div class="aui-description description">$i18n.getText("plugin.configuration.url.description")</div>
           </div>
         </div>
