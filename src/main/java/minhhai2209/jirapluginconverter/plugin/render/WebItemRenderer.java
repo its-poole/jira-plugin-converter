@@ -79,7 +79,7 @@ public class WebItemRenderer extends HttpServlet {
 
       Map<String, String> productContext = ParameterContextBuilder.buildContext(request, null, null, null);
 
-      String xdm_e = JiraUtils.getBaseUrl();
+      String xdm_e = PluginSetting.getPluginJiraBaseUrl();
       String cp = JiraUtils.getContextPath();
       String ns = PluginSetting.getDescriptor().getKey() + "__" + moduleKey;
       String xdm_c = "channel-" + ns;

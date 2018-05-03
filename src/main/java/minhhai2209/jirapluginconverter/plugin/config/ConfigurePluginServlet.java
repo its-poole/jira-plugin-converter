@@ -62,9 +62,11 @@ public class ConfigurePluginServlet extends HttpServlet {
   private static final String RESPONSE_CONTENT_TYPE = "text/html;charset=utf-8";
 
   public static String DB_URL = PluginSetting.getDescriptor().getKey() + ".url";
+  public static String DB_JIRA_URL = PluginSetting.getDescriptor().getKey() + ".jiraurl";
   public static String DB_USER = PluginSetting.getDescriptor().getKey() + ".user";
 
   private static final String UI_URL = "url";
+  private static final String UI_JIRA_URL = "jiraurl";
   private static final String UI_USER = "user";
   private static final String UI_USERS = "users";
 
@@ -108,6 +110,9 @@ public class ConfigurePluginServlet extends HttpServlet {
         String url = PluginSetting.getPluginBaseUrl();
         updateContext(context, UI_URL, url);
 
+        String jiraUrl = PluginSetting.getPluginJiraBaseUrl();
+        updateContext(context, UI_JIRA_URL, jiraUrl);
+
         ApplicationUser user = PluginSetting.getPluginUser();
         String userKey = user.getKey();
         updateContext(context, UI_USER, userKey);
@@ -145,15 +150,18 @@ public class ConfigurePluginServlet extends HttpServlet {
         final StringBuilder error = new StringBuilder("");
 
         final String url = request.getParameter(UI_URL);
+        final String jiraUrl = request.getParameter(UI_JIRA_URL);
         final String user = request.getParameter(UI_USER);
         try {
           //just to check that it's a valid URL
 
           updateContext(context, UI_URL, url);
+          updateContext(context, UI_JIRA_URL, jiraUrl);
           updateContext(context, UI_USER, user);
           addListUsersToContext(context);
 
           URIBuilder uriBuilder = new URIBuilder(url);
+          URIBuilder jiraUriBuilder = new URIBuilder(jiraUrl);
 
           // login to qTest
           transactionTemplate.execute(new TransactionCallback() {
@@ -162,6 +170,7 @@ public class ConfigurePluginServlet extends HttpServlet {
               try {
                 PluginSettings settings = pluginSettingsFactory.createGlobalSettings();
                 settings.put(DB_URL, url);
+                settings.put(DB_JIRA_URL, jiraUrl);
                 settings.put(DB_USER, user);
               } catch (Exception e) {
                 error.append(ExceptionUtils.getStackTrace(e));
@@ -255,7 +264,7 @@ public class ConfigurePluginServlet extends HttpServlet {
     }
   }
 
-  private void addConfigurePage(HttpServletRequest request, Map<String, Object> context) 
+  private void addConfigurePage(HttpServletRequest request, Map<String, Object> context)
   throws URISyntaxException {
       Modules modules = PluginSetting.getModules();
       if (modules != null) {
@@ -287,7 +296,7 @@ public class ConfigurePluginServlet extends HttpServlet {
           String w;
           String h;
 
-          String xdm_e = JiraUtils.getBaseUrl();
+          String xdm_e = PluginSetting.getPluginJiraBaseUrl();
           String cp = JiraUtils.getContextPath();
           String ns = PluginSetting.getDescriptor().getKey() + "__" + moduleKey;
           String xdm_c = "channel-" + ns;

@@ -128,7 +128,7 @@ public class WorkflowPluginFactory extends AbstractWorkflowPluginFactory impleme
 
       Map<String, String> productContext = ParameterContextBuilder.buildWorkflowContext( velocityParams);
 
-      String xdm_e = JiraUtils.getBaseUrl();
+      String xdm_e = PluginSetting.getPluginJiraBaseUrl();
       String cp = JiraUtils.getContextPath();
       String ns = PluginSetting.getDescriptor().getKey() + "__" + key;
       String xdm_c = "channel-" + ns;

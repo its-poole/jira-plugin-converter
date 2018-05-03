@@ -109,7 +109,7 @@ public class PageRenderer extends HttpServlet {
         String w;
         String h;
 
-        String xdm_e = JiraUtils.getBaseUrl();
+        String xdm_e = PluginSetting.getPluginJiraBaseUrl();
         String cp = JiraUtils.getContextPath();
         String ns = PluginSetting.getDescriptor().getKey() + "__" + moduleKey;
         String xdm_c = "channel-" + ns;
@@ -234,7 +234,7 @@ public class PageRenderer extends HttpServlet {
         String w = "100%";
         String h = "100%";
 
-        String xdm_e = JiraUtils.getBaseUrl();
+        String xdm_e = PluginSetting.getPluginJiraBaseUrl();
         String cp = JiraUtils.getContextPath();
         String ns = PluginSetting.getDescriptor().getKey() + "__" + moduleKey;
         String xdm_c = "channel-" + ns;
