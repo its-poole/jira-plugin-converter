@@ -58,7 +58,7 @@ public class ProjectTabPanelRenderer extends AbstractProjectTabPanel {
 
       Map<String, String> productContext = ParameterContextBuilder.buildContext(null, null, null, browseContext);
 
-      String xdm_e = JiraUtils.getBaseUrl();
+      String xdm_e = PluginSetting.getPluginJiraBaseUrl();
       String cp = JiraUtils.getContextPath();
       String ns = PluginSetting.getDescriptor().getKey() + "__" + moduleKey;
       String xdm_c = "channel-" + ns;

@@ -101,7 +101,7 @@ public class PluginLifeCycleEventHandler {
       if (uri != null && configuredPluginBaseUrl != null && !configuredPluginBaseUrl.isEmpty()) {
         System.out.println(PluginSetting.getDescriptor().getKey() + " PLUGIN NOTIFY EVENT: " + "publishing install payload to: " + configuredPluginBaseUrl + uri);
         PluginLifeCycleEvent event = new PluginLifeCycleEvent();
-        event.setBaseUrl(JiraUtils.getFullBaseUrl());
+        event.setBaseUrl(PluginSetting.getPluginJiraBaseUrl());
         event.setClientKey(KeyUtils.getClientKey());
         event.setDescription("");
         event.setEventType(eventType);

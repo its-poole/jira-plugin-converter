@@ -15,8 +15,8 @@ import minhhai2209.jirapluginconverter.connect.descriptor.Modules;
 import minhhai2209.jirapluginconverter.plugin.config.ConfigurePluginServlet;
 import minhhai2209.jirapluginconverter.utils.ExceptionUtils;
 import minhhai2209.jirapluginconverter.utils.JsonUtils;
+import minhhai2209.jirapluginconverter.plugin.setting.JiraUtils;
 import org.apache.commons.io.IOUtils;
-
 import java.io.InputStream;
 import java.util.Collection;
 
@@ -98,6 +98,25 @@ public class PluginSetting {
     } else if (jiraUrl.startsWith("https:")) {
       baseUrl = baseUrl.replace("http:", "https:");
     }
+    return baseUrl;
+  }
+
+  public static String getPluginJiraBaseUrl() {
+    String baseUrl = transactionTemplate.execute(new TransactionCallback<String>() {
+
+      @Override
+      public String doInTransaction() {
+        PluginSettings settings = pluginSettingsFactory.createGlobalSettings();
+        String url = (String) settings.get(ConfigurePluginServlet.DB_JIRA_URL);
+        return url;
+      }
+
+    });
+
+    if (baseUrl == null) {
+      baseUrl = JiraUtils.getBaseUrl();
+    }
+
     return baseUrl;
   }
 

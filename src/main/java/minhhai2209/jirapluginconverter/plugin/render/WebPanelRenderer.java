@@ -67,7 +67,7 @@ public class WebPanelRenderer implements com.atlassian.plugin.web.renderer.WebPa
 
       Map<String, String> productContext = ParameterContextBuilder.buildContext(null, context, null, null);
 
-      String xdm_e = JiraUtils.getBaseUrl();
+      String xdm_e = PluginSetting.getPluginJiraBaseUrl();
       String cp = JiraUtils.getContextPath();
       String ns = PluginSetting.getDescriptor().getKey() + "__" + moduleKey;
       String xdm_c = "channel-" + ns;
