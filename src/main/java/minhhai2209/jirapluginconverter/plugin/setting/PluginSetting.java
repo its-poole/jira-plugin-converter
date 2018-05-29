@@ -92,12 +92,7 @@ public class PluginSetting {
     if (baseUrl == null) {
       baseUrl = descriptor.getBaseUrl();
     }
-    String jiraUrl = JiraUtils.getBaseUrl();
-    if (jiraUrl.startsWith("http:") && baseUrl.startsWith("https:")) {
-      baseUrl = baseUrl.replace("https:", "http:");
-    } else if (jiraUrl.startsWith("https:")) {
-      baseUrl = baseUrl.replace("http:", "https:");
-    }
+
     return baseUrl;
   }
 

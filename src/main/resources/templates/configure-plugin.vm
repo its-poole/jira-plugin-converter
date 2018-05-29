@@ -55,10 +55,10 @@
           #if($error)
           <div class="aui-message error">
             <span class="aui-icon icon-error"></span>
-            <p>$i18n.getText("plugin.configuration.error.text"): <a 
-                id="error-details-trigger" 
-                data-replace-text="$i18n.getText("plugin.configuration.error.expander.less")" 
-                class="aui-expander-trigger" 
+            <p>$i18n.getText("plugin.configuration.error.text"): <a
+                id="error-details-trigger"
+                data-replace-text="$i18n.getText("plugin.configuration.error.expander.less")"
+                class="aui-expander-trigger"
                 aria-controls="error-details">$i18n.getText("plugin.configuration.error.expander.more")</a>
             </p>
             <div id="error-details" class="aui-expander-content">$error</div>
@@ -70,15 +70,41 @@
             <p>$i18n.getText("plugin.configuration.success")</p>
           </div>
           #end
+          <h4>Url Configuration</h4>
           <div class="field-group">
             <label for="url">$i18n.getText("plugin.configuration.url.label")</label>
-            <input type="url" required pattern="https?://.+"  value="$url" id="url" name="url" class="text">
+            <input type="url" required pattern="https?://.+"  value="$url" id="url" name="url" class="text" />
             <div class="aui-description description">$i18n.getText("plugin.configuration.url.description")</div>
           </div>
           <div class="field-group">
             <label for="jiraurl">$i18n.getText("plugin.configuration.baseurl.label")</label>
-            <input type="jiraurl" required pattern="https?://.+"  value="$jiraurl" id="jiraurl" name="jiraurl" class="text">
+            <input type="url" required pattern="https?://.+"  value="$jiraurl" id="jiraurl" name="jiraurl" class="text" />
             <div class="aui-description description">$i18n.getText("plugin.configuration.baseurl.description")</div>
+          </div>
+          <h4>Jira API User Configuration</h4>
+          <div class="aui-message info">
+            <span class="aui-icon icon-info"></span>
+            <p>Scenario will by default attempt to communicate with your Jira instance by way of Oauth. If this is unsuccessful,
+            you will encounter credentials or security related errors in your browser when accessing the qTest Scenario menu item for a given
+            project. Jira instances configured with SSO or Atlassian Crowd are most likely to encounter these errors. If you experience
+            the aforementioned errors when configuring a project, please provide a username and password for a Jira API user below.
+            The configured API user should have permission to perform the following actions:
+            </p>
+            <ul>
+              <li>View all available issue types</li>
+              <li>View all users' profiles</li>
+              <li>Browse all projects</li>
+              <li>Modify all projects</li>
+            </ul>
+          </div>
+          <div class="field-group">
+            <label for="globaladminusername">Username</label>
+            <input type="text" value="$globaladminusername" id="globladminusername" name="globaladminusername" class="text" />
+            <div class="aui-description description">Your API user can be removed by clearing both the Username and Password fields prior to submitting the Plugin Configuration form.</div>
+          </div>
+          <div class="field-group">
+            <label for="globaladminpassword">Password</label>
+            <input type="password" value="$globaladminpassword" id="globaladminpassword" name="globaladminpassword" class="text" />
           </div>
         </div>
         <div class="buttons-container form-footer">

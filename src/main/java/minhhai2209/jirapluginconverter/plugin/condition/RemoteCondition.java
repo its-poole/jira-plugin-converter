@@ -67,6 +67,11 @@ public class RemoteCondition extends AbstractWebCondition {
       String issueId = productContext.get("issue.id");
       String issueTypeId = productContext.get("issuetype.id");
 
+      if (projectId == null || projectId.isEmpty() || issueId == null || issueId.isEmpty()) {
+        System.out.println(PluginSetting.getDescriptor().getKey() + " getRemoteCondition: suppressing web request. no issueid or projectid present (null context).");
+        return false;
+      }
+
       if (projectId != null) {
         builder.addParameter("projectId", projectId);
       }
