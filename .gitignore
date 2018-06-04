@@ -6,3 +6,4 @@ target
 .idea
 build
 *.swp
+.DS_Store
