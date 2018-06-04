@@ -98,7 +98,7 @@
               <li>Browse all projects</li>
               <li>Administer all projects</li>
             </ul>
-            <p><strong>NOTE:</strong> Rather than use an user with full administrative prilidges, you can instead configure a user
+            <p><strong>NOTE:</strong> Rather than use a user with full administrative prilidges, you may instead configure a user
             with the <strong>Browse Projects</strong> and <strong>Administer Projects</strong> permissions. Navigate to
             <strong>Project settings > Permissions</strong> and modify your project level Permission scheme to add this configuration.
             Enter both the Browse and Administer permissions, enter the name of the API user via auto-complete, and select the Grant button to apply your changes:
