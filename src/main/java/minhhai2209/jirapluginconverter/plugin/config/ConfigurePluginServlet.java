@@ -184,6 +184,7 @@ public class ConfigurePluginServlet extends HttpServlet {
           credentials.setPass(projectAdminPass);
 
           pluginLifeCycleEventHandler.onInstalled(error);
+          pluginLifeCycleEventHandler.onProjectAdminCredentialsSaved(error, credentials);
 
           transactionTemplate.execute(new TransactionCallback() {
             @Override
