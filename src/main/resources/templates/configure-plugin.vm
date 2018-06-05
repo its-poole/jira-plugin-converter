@@ -109,7 +109,7 @@
           </div>
           <div class="field-group">
             <label for="globaladminusername">Username</label>
-            <input type="text" value="$globaladminusername" id="globladminusername" name="globaladminusername" class="text" />
+            <input type="text" value="$globaladminusername" id="globaladminusername" name="globaladminusername" class="text" />
             <div class="aui-description description">Your API user can be removed by clearing both the Username and Password fields prior to submitting the Plugin Configuration form.</div>
           </div>
           <div class="field-group">

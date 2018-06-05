@@ -64,11 +64,15 @@ public class ConfigurePluginServlet extends HttpServlet {
   public static String DB_URL = PluginSetting.getDescriptor().getKey() + ".url";
   public static String DB_JIRA_URL = PluginSetting.getDescriptor().getKey() + ".jiraurl";
   public static String DB_USER = PluginSetting.getDescriptor().getKey() + ".user";
+  public static String DB_PROJECT_ADMIN_USERNAME = PluginSetting.getDescriptor().getKey() + ".globaladminusername";
+  public static String DB_PROJECT_ADMIN_PASS = PluginSetting.getDescriptor().getKey() + ".globaladminpassword";
 
   private static final String UI_URL = "url";
   private static final String UI_JIRA_URL = "jiraurl";
   private static final String UI_USER = "user";
   private static final String UI_USERS = "users";
+  private static final String UI_PROJECT_ADMIN_USERNAME = "globaladminusername";
+  private static final String UI_PROJECT_ADMIN_PASS = "globaladminpassword";
 
   // Injected by JIRA
   public ConfigurePluginServlet(
@@ -113,6 +117,12 @@ public class ConfigurePluginServlet extends HttpServlet {
         String jiraUrl = PluginSetting.getPluginJiraBaseUrl();
         updateContext(context, UI_JIRA_URL, jiraUrl);
 
+        String projectAdminUsername = PluginSetting.getPluginProjectAdminUsername();
+        updateContext(context, UI_PROJECT_ADMIN_USERNAME, projectAdminUsername);
+
+        String projectAdminPass = PluginSetting.getPluginProjectAdminPass();
+        updateContext(context, UI_PROJECT_ADMIN_PASS, projectAdminPass);
+
         ApplicationUser user = PluginSetting.getPluginUser();
         String userKey = user.getKey();
         updateContext(context, UI_USER, userKey);
@@ -152,18 +162,29 @@ public class ConfigurePluginServlet extends HttpServlet {
         final String url = request.getParameter(UI_URL);
         final String jiraUrl = request.getParameter(UI_JIRA_URL);
         final String user = request.getParameter(UI_USER);
+        final String projectAdminUsername = request.getParameter(UI_PROJECT_ADMIN_USERNAME);
+        final String projectAdminPass = request.getParameter(UI_PROJECT_ADMIN_PASS);
+
         try {
           //just to check that it's a valid URL
 
           updateContext(context, UI_URL, url);
           updateContext(context, UI_JIRA_URL, jiraUrl);
           updateContext(context, UI_USER, user);
+          updateContext(context, UI_PROJECT_ADMIN_USERNAME, projectAdminUsername);
+          updateContext(context, UI_PROJECT_ADMIN_PASS, projectAdminPass);
           addListUsersToContext(context);
 
           URIBuilder uriBuilder = new URIBuilder(url);
           URIBuilder jiraUriBuilder = new URIBuilder(jiraUrl);
 
-          // login to qTest
+          ProjectAdministratorCredentials credentials = new ProjectAdministratorCredentials();
+
+          credentials.setUsername(projectAdminUsername);
+          credentials.setPass(projectAdminPass);
+
+          pluginLifeCycleEventHandler.onInstalled(error);
+
           transactionTemplate.execute(new TransactionCallback() {
             @Override
             public Object doInTransaction() {
@@ -172,15 +193,14 @@ public class ConfigurePluginServlet extends HttpServlet {
                 settings.put(DB_URL, url);
                 settings.put(DB_JIRA_URL, jiraUrl);
                 settings.put(DB_USER, user);
+                settings.put(DB_PROJECT_ADMIN_USERNAME, projectAdminUsername);
+                settings.put(DB_PROJECT_ADMIN_PASS, projectAdminPass);
               } catch (Exception e) {
                 error.append(ExceptionUtils.getStackTrace(e));
               }
               return null;
             }
           });
-
-          pluginLifeCycleEventHandler.onInstalled(error);
-
         } catch (Exception e) {
           error.append(ExceptionUtils.getStackTrace(e));
         }

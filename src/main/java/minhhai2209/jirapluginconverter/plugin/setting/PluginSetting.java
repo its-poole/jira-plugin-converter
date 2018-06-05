@@ -115,6 +115,36 @@ public class PluginSetting {
     return baseUrl;
   }
 
+  public static String getPluginProjectAdminUsername() {
+    String projectAdminUsername = transactionTemplate.execute(new TransactionCallback<String>() {
+
+      @Override
+      public String doInTransaction() {
+        PluginSettings settings = pluginSettingsFactory.createGlobalSettings();
+        String username = (String) settings.get(ConfigurePluginServlet.DB_PROJECT_ADMIN_USERNAME);
+        return username;
+      }
+
+    });
+
+    return projectAdminUsername;
+  }
+
+  public static String getPluginProjectAdminPass() {
+    String projectAdminPass = transactionTemplate.execute(new TransactionCallback<String>() {
+
+      @Override
+      public String doInTransaction() {
+        PluginSettings settings = pluginSettingsFactory.createGlobalSettings();
+        String pass = (String) settings.get(ConfigurePluginServlet.DB_PROJECT_ADMIN_PASS);
+        return pass;
+      }
+
+    });
+
+    return projectAdminPass;
+  }
+
   public static Modules getModules() {
     return descriptor.getModules();
   }
