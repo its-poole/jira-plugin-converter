@@ -40,6 +40,10 @@
       .api-user-configuration-help {
         border: 1px solid black;
       }
+
+      #url-configuration {
+        margin-top: 0.9em;
+      }
     </style>
   </head>
   <body>
@@ -74,7 +78,7 @@
             <p>$i18n.getText("plugin.configuration.success")</p>
           </div>
           #end
-          <h4>Url Configuration</h4>
+          <h4 id="url-configuration">Url Configuration</h4>
           <div class="field-group">
             <label for="url">$i18n.getText("plugin.configuration.url.label")</label>
             <input type="url" required pattern="https?://.+"  value="$url" id="url" name="url" class="text" />

@@ -128,16 +128,17 @@ public class ConfigurePluginServlet extends HttpServlet {
         updateContext(context, UI_USER, userKey);
 
         final StringBuilder error = new StringBuilder("");
+
         try{
           addConfigurePage(request, context);
-        }catch(Exception e){
+        } catch(Exception e){
           error.append(ExceptionUtils.getStackTrace(e));
         }
+
         if (error.length() > 0) {
           updateContext(context, "error", error.toString());
-        } else {
-          updateContext(context, "success", "success");
         }
+
         render(response, context);
       }
     });
