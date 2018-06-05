@@ -4,7 +4,7 @@ public class ProjectAdministratorCredentials {
 
   private String username;
 
-  private String pass;
+  private String password;
 
   public String getUsername() {
     return username;
@@ -14,11 +14,11 @@ public class ProjectAdministratorCredentials {
     this.username = username;
   }
 
-  public String getPass() {
-    return pass;
+  public String getPassword() {
+    return password;
   }
 
-  public void setPass(String pass) {
-    this.pass = pass;
+  public void setPassword(String password) {
+    this.password = password;
   }
 }
