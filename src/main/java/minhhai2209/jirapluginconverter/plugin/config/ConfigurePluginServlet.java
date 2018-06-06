@@ -179,29 +179,6 @@ public class ConfigurePluginServlet extends HttpServlet {
           URIBuilder uriBuilder = new URIBuilder(url);
           URIBuilder jiraUriBuilder = new URIBuilder(jiraUrl);
 
-          ProjectAdministratorCredentials credentials = new ProjectAdministratorCredentials();
-
-          credentials.setUsername(projectAdminUsername);
-          credentials.setPassword(projectAdminPass);
-
-          pluginLifeCycleEventHandler.onInstalled(error);
-          pluginLifeCycleEventHandler.onProjectAdminCredentialsSaved(error, credentials);
-
-        } catch (Exception e) {
-          error.append(ExceptionUtils.getStackTrace(e));
-        }
-
-        try{
-          addConfigurePage(request, context);
-        }catch(Exception e){
-          error.append(ExceptionUtils.getStackTrace(e));
-        }
-
-        if (error.length() > 0) {
-          System.out.println(PluginSetting.getDescriptor().getKey() + " PLUGIN CONFIGURATION ERROR");
-          updateContext(context, "error", error.toString());
-        } else {
-          System.out.println(PluginSetting.getDescriptor().getKey() + " PLUGIN CONFIGURATION SUCCESS. UPDATING SETTINGS.");
           transactionTemplate.execute(new TransactionCallback() {
             @Override
             public Object doInTransaction() {
@@ -219,6 +196,28 @@ public class ConfigurePluginServlet extends HttpServlet {
             }
           });
 
+          ProjectAdministratorCredentials credentials = new ProjectAdministratorCredentials();
+
+          credentials.setUsername(projectAdminUsername);
+          credentials.setPassword(projectAdminPass);
+
+          pluginLifeCycleEventHandler.onInstalled(error);
+          pluginLifeCycleEventHandler.onProjectAdminCredentialsSaved(error, credentials);
+        } catch (Exception e) {
+          error.append(ExceptionUtils.getStackTrace(e));
+        }
+
+        try{
+          addConfigurePage(request, context);
+        }catch(Exception e){
+          error.append(ExceptionUtils.getStackTrace(e));
+        }
+
+        if (error.length() > 0) {
+          System.out.println(PluginSetting.getDescriptor().getKey() + " PLUGIN CONFIGURATION ERROR");
+          updateContext(context, "error", error.toString());
+        } else {
+          System.out.println(PluginSetting.getDescriptor().getKey() + " PLUGIN CONFIGURATION SUCCESS. UPDATING SETTINGS.");
           updateContext(context, "success", "success");
         }
         render(response, context);
