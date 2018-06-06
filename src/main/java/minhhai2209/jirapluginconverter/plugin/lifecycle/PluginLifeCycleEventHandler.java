@@ -18,6 +18,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 
@@ -92,6 +93,49 @@ public class PluginLifeCycleEventHandler {
     String uri = LifeCycleUtils.getUninstalledUri();
     String jwt = JwtComposer.compose(KeyUtils.getClientKey(), KeyUtils.getSharedSecret(), "POST", uri, null, null);
     notify(null, EventType.uninstalled, uri, null, jwt);
+  }
+
+  public void  onProjectAdminCredentialsSaved(StringBuilder error, ProjectAdministratorCredentials credentials) {
+    try {
+      String configuredPluginBaseUrl = PluginSetting.getPluginBaseUrl();
+
+      if (configuredPluginBaseUrl != null && !configuredPluginBaseUrl.isEmpty()) {
+        System.out.println(PluginSetting.getDescriptor().getKey() + " PLUGIN API USER: manifest");
+
+        String uri = "/jira/server-7.x/accounts/settings";
+        String url = configuredPluginBaseUrl + uri;
+        HttpClient httpClient = HttpClientFactory.build();
+        String jwt = JwtComposer.compose(KeyUtils.getClientKey(), KeyUtils.getSharedSecret(), "PUT", uri, null, null);
+        String json = JsonUtils.toJson(credentials);
+        HttpPut put = new HttpPut(url);
+
+        put.setEntity(new StringEntity(json));
+        put.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        if (jwt != null) {
+          put.addHeader("Authorization", "JWT " + jwt);
+        }
+
+        HttpResponse response = httpClient.execute(put);
+
+        if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
+          HttpEntity entity = response.getEntity();
+
+          if (entity != null) {
+            String responseString = EntityUtils.toString(entity, "UTF-8");
+
+            error.append(responseString);
+          }
+        }
+      } else {
+        System.out.println(PluginSetting.getDescriptor().getKey() + " PLUGIN API USER: suppressing notification. no plugin base url configured.");
+      }
+    } catch (Exception e) {
+      System.out.println(PluginSetting.getDescriptor().getKey() + " PLUGIN API USER: FAILED: " + e.getMessage());
+      if (error != null) {
+        error.append(ExceptionUtils.getStackTrace(e));
+      }
+    }
   }
 
   private void notify(StringBuilder error, EventType eventType, String uri, String sharedSecret, String jwt) throws Exception {

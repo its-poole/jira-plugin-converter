@@ -92,12 +92,7 @@ public class PluginSetting {
     if (baseUrl == null) {
       baseUrl = descriptor.getBaseUrl();
     }
-    String jiraUrl = JiraUtils.getBaseUrl();
-    if (jiraUrl.startsWith("http:") && baseUrl.startsWith("https:")) {
-      baseUrl = baseUrl.replace("https:", "http:");
-    } else if (jiraUrl.startsWith("https:")) {
-      baseUrl = baseUrl.replace("http:", "https:");
-    }
+
     return baseUrl;
   }
 
@@ -118,6 +113,36 @@ public class PluginSetting {
     }
 
     return baseUrl;
+  }
+
+  public static String getPluginProjectAdminUsername() {
+    String projectAdminUsername = transactionTemplate.execute(new TransactionCallback<String>() {
+
+      @Override
+      public String doInTransaction() {
+        PluginSettings settings = pluginSettingsFactory.createGlobalSettings();
+        String username = (String) settings.get(ConfigurePluginServlet.DB_PROJECT_ADMIN_USERNAME);
+        return username;
+      }
+
+    });
+
+    return projectAdminUsername;
+  }
+
+  public static String getPluginProjectAdminPass() {
+    String projectAdminPass = transactionTemplate.execute(new TransactionCallback<String>() {
+
+      @Override
+      public String doInTransaction() {
+        PluginSettings settings = pluginSettingsFactory.createGlobalSettings();
+        String pass = (String) settings.get(ConfigurePluginServlet.DB_PROJECT_ADMIN_PASS);
+        return pass;
+      }
+
+    });
+
+    return projectAdminPass;
   }
 
   public static Modules getModules() {
